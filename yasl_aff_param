@@ -1,12 +1,7 @@
-#!yasl
+#!yasl_linux
 
-(# 2 ==) ?
-(
-exit
-)
-:
-(
-	!!
-	#
-	#(print "\n" print)
-)
+!!
+#
+0
+==
+? (1 exit) : (# #(print "\n" print))
