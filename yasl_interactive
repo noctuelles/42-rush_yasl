@@ -1,0 +1,9 @@
+#!ressources/yasl_linux
+
+#!
+1
+%@ (
+	read
+	= 0 == ? (0 exit) : !
+	eval
+)
