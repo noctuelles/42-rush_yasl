@@ -1,0 +1,73 @@
+#!ressources/yasl_linux
+
+// Stack 1 : la stack ou il y aura chaque caractere
+// Stack 2 : une stack temporaire.
+// Stack 3 : une stack pour le while.
+// Stack 4 : une stack qui va nous dire si on est dans un mot.
+// Stack 5 : une stack de comparaison.
+
+{
+	1 -
+} decrement
+
+{
+	"Usage : ./yasl_split <separator> <string>\n<separator> must be one unique character.\n"
+	print
+	1
+	exit
+} usage
+
+{
+	# 2 != ? (usage)		// Check nbr args.
+	[#] 1 > ? (usage)	// Check if separator is a uniq char.
+} checks
+
+{
+	4:!
+	1:4
+}	set_in_word_true
+
+{
+	4:!
+	0:4
+}	set_in_word_false
+
+{
+	"\n":0
+	0:print
+}	newline
+
+{
+	0:!
+	(4:=:4 1:4 4:==:4) 4:? (
+		newline
+		set_in_word_false
+	)
+} is_a_separator
+
+{
+	0:print
+	set_in_word_true
+} is_not_a_separator
+
+{
+	%@ (
+		0:=:5
+		1:=:5
+		(5:==:5) 5:? (is_a_separator) : (is_not_a_separator)
+		decrement
+	)
+} loop
+
+!!
+checks
+=:1 !					// Push the separator into stack 1.
+[#] 0 == ? (0 exit)		// Check if the string is empty, if she's, just exit
+][:2					// Push the entire string into stack 2
+2:#(2:=:0 !)			// Re-push again on stack 0 while emptying stack 2. Stack 2 is now empty. 
+# =:3 !					// Set the while stack to the number of char in stack 0.
+0:4						// We're not in a word
+
+3:loop:3				// Main loop
+
+(4:=:4 1:4 4:==:4) 4:? newline	// If we're still in a word when finished, print an additional newline 
