@@ -1,11 +1,12 @@
 #!ressources/yasl_linux
 
-!! # ? (
-	0:eval:1
-	1:(= 0 > ? (1 -) : ("Argument must be stricly positive.\n" print 1 exit)):1
+!! # 1 > ? (
+	0 +
+	:1
+	1:(= 0 > ? (1 -) : ("Argument must be stricly positive / start with a number.\n" print 1 exit)):1
 	# #(
 		1:= 0 > ? (= # !^ 1:= #(# ^ = # !^ +))
 		"\n" + print
 		1:(1 +):1
 	)
-)
+) : ("Usage : ./yasl_repeat <start_num> <value1> [ <value2> [ ...]]\n" print 1 exit)
