@@ -1,0 +1,37 @@
+#!yasl
+
+{
+	"Image received, nb pixels : "
+	print
+	1:=:0
+	print "\n" print
+} image_received
+
+{
+	"Found square : "
+	print
+	2:=:0
+	print "\n" print
+} found_square
+
+{
+	2:=:0 2:=:0 *	// Multiply by itself the square size
+	1:=:0			// Get the number of pixels
+	!=				// If we doesn't get the same amount it's a bad image !
+	? ("Invalid image. Aborting.\n" print 1 exit) : ("Correct image. Rendering...\n" print)
+} check_if_image_valid
+
+{
+	64 / 1 + =:1 !		// Put the amount of pixels into stack 1.
+} get_nbr_pixels
+
+{
+	1:=:0 32 / =:2 !	// Put the square size into stack 2
+} get_square_size
+
+read
+get_nbr_pixels
+image_received
+get_square_size
+found_square
+check_if_image_valid
