@@ -4,4 +4,4 @@
 #
 0
 ==
-? (1 exit) : (# #(print "\n" print))
+? (0 exit) : (# #(print "\n" print))
