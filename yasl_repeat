@@ -1,12 +1,33 @@
 #!ressources/yasl_linux
 
-!! # 1 > ? (
+{
+	1 -
+} decrement
+
+{
 	0 +
-	:1
-	1:(= 0 > ? (1 -) : ("Argument must be stricly positive / start with a number.\n" print 1 exit)):1
-	# #(
-		1:= 0 > ? (= # !^ 1:= #(# ^ = # !^ +))
-		"\n" + print
-		1:(1 +):1
+} convert_int
+
+{
+	"Usage : ./yasl_repeat <start_num> <value1> [ <value2> [ ...]]\n<start_num> must be a positive integer.\n"
+	print
+	1 exit
+} usage
+
+{
+	[#]
+	%@ (
+		decrement
+		%]#[ "0" < ? (usage)
+		%]#[ "9" > ? (usage)
 	)
-) : ("Usage : ./yasl_repeat <start_num> <value1> [ <value2> [ ...]]\n" print 1 exit)
+} is_an_int
+
+!!
+# 2 < ? usage 
+0:=:2
+2:is_an_int:2
+
+convert_int
+= 1 == ? (1 -)
+print

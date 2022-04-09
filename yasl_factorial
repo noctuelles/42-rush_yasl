@@ -1,12 +1,42 @@
 #!ressources/yasl_linux
 
+{
+	1 -
+} decrement
+
+{
+	[#]
+	%@ (
+		decrement
+		%]#[ "0" < ? (1 exit)
+		%]#[ "9" > ? (1 exit)
+	)
+} is_an_int
+
+{
+	0 +
+} convert_int
+
+{
+	= 0 < ? (1 exit)
+	= 20 > ? (1 exit)
+	= 0 == ? ("1\n" print 0 exit)
+} check_valid_range
+
+{
+	# 1 != ? (2 exit)
+} check_valid_number_args
+
 !!
-# 0 == ? (1 exit)
-0
-+
-= 0 < ? (1 exit)
-= 20 > ? (1 exit)
-= 0 == ? ("1\n" print 0 exit)
+
+check_valid_number_args
+
+0:=:4
+4:is_an_int:4
+
+convert_int
+check_valid_range
+
 0:=:1
 1:(1 -):1
 1:%@ (
@@ -14,4 +44,5 @@
 	0:*:0
 	1:(1 -):1
 )
+
 "\n" + print
