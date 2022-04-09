@@ -1,4 +1,4 @@
-#!yasl
+#!ressources/yasl_linux
 
 {
 	"Image received, nb pixels : "
