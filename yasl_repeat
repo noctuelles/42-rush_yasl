@@ -23,11 +23,31 @@
 	)
 } is_an_int
 
+{
+	"\n"
+	print
+} new_line 
+
 !!
 # 2 < ? usage 
 0:=:2
 2:is_an_int:2
 
-convert_int
-= 1 == ? (1 -)
-print
+convert_int			// converti chaine en int
+= 0 == ? (usage)
+0:=:1 !				// le nombre de repetition : stack 1
+0:#:2				// le nombre de chaine que tu as : stack 2, apres on aura le premier arg au top.
+
+2:%@ (
+	1:=:1
+	1:%@ (
+		0:=:3
+		3:print
+		1:(1 -):1
+	)
+	1:!:1
+	0:!:0
+	0:new_line
+	1:(1 +):1
+	2:(1 -):2
+)
