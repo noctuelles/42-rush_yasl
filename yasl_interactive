@@ -3,6 +3,8 @@
 {
 	read
 	= 0 == ? (0 exit) : !
+	" "
+	+
 	eval
 } _read
 
