@@ -51,10 +51,10 @@
 	"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 } make_table
 
-{
+#!
 
-} read_file
- 
+// ***************** Init ******************* //
+
 1:1					// Placer le bool pour la lectrure
 ""					// Chaine vide initiale
 1:%@ (				// Loop de la lecture du fichier
@@ -69,3 +69,21 @@ get_nbr_pixels
 get_square_size
 image_received
 found_square
+
+// ***************** String Splitting ******************* //
+
+][:3
+3:(!):3				// Remove the number of char on stack 3
+1:=:4
+4:%@ (
+	3:(+++):3
+	3:=:0 3:(!):3
+	1:4 4:-:4
+)
+					// Now all the splitted strings are on 0 in the right order.
+4:(!):4				// Stack 4 is now empty, Stack 3 too
+3:make_table:3		// Stack 3, la table
+][:4
+4:#(
+	4:print "\n":4 4:print
+)
