@@ -22,16 +22,50 @@
 } check_if_image_valid
 
 {
-	64 / 1 + =:1 !		// Put the amount of pixels into stack 1.
+	4 / =:1 !		// Put the amount of pixels into stack 1.
 } get_nbr_pixels
 
 {
-	1:=:0 32 / =:2 !	// Put the square size into stack 2
+	"Wrong image : the image must be square.\n"
+	print
+	1
+	exit
+} print_wrong_image
+
+{
+	1:4			// stack 4, pour la boucle
+	1:3				// on commence a 1 dans la stack 3
+	4:%@ (
+		3:=:3		// on duplique le nombre dans 3
+		3:%*:3		// on le multiplie par lui meme
+		1:=:3		// on va chercher le nombre de pixels on le met dans 3
+		3:%==:3  3:? (3:(!!!):3 4:! 0:4) : (
+			3:%>:3 3:? (3:print_wrong_image:3) : (3:(!!!):3 1:3 3:+:3)
+		)
+	)
+	4:(!)			// La stack 4 est maintenant vide
+	3:=:2 3:!		// La stack 2 contient la taille du carre. La stack 3 est maintenant vide.
 } get_square_size
 
-read
+{
+	"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+} make_table
+
+{
+
+} read_file
+ 
+1:1					// Placer le bool pour la lectrure
+""					// Chaine vide initiale
+1:%@ (				// Loop de la lecture du fichier
+	0:read:0
+	65535:0
+	(0:==:0) 0:? (1:! 1:1) : (1:! 0:1)
+	0:+
+)					// Notre fichier est entierement lu.
+1:!					// La stack 1 est maintenant vide
+[#]					// On obtient le nombres de caracteres du fichier
 get_nbr_pixels
-image_received
 get_square_size
+image_received
 found_square
-check_if_image_valid
