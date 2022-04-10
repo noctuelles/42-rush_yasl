@@ -1,89 +1,207 @@
 #!ressources/yasl_linux
 
 {
-	"Image received, nb pixels : "
-	print
-	1:=:0
-	print "\n" print
-} image_received
-
-{
-	"Found square : "
-	print
-	2:=:0
-	print "\n" print
-} found_square
-
-{
-	2:=:0 2:=:0 *	// Multiply by itself the square size
-	1:=:0			// Get the number of pixels
-	!=				// If we doesn't get the same amount it's a bad image !
-	? ("Invalid image. Aborting.\n" print 1 exit) : ("Correct image. Rendering...\n" print)
-} check_if_image_valid
-
-{
-	4 / =:1 !		// Put the amount of pixels into stack 1.
-} get_nbr_pixels
-
-{
-	"Wrong image : the image must be square.\n"
-	print
-	1
-	exit
+    "Wrong image : the image must be square.\n"
+    print
+    1
+    exit
 } print_wrong_image
 
 {
-	1:4			// stack 4, pour la boucle
-	1:3				// on commence a 1 dans la stack 3
-	4:%@ (
-		3:=:3		// on duplique le nombre dans 3
-		3:%*:3		// on le multiplie par lui meme
-		1:=:3		// on va chercher le nombre de pixels on le met dans 3
-		3:%==:3  3:? (3:(!!!):3 4:! 0:4) : (
-			3:%>:3 3:? (3:print_wrong_image:3) : (3:(!!!):3 1:3 3:+:3)
-		)
-	)
-	4:(!)			// La stack 4 est maintenant vide
-	3:=:2 3:!		// La stack 2 contient la taille du carre. La stack 3 est maintenant vide.
+    1:4            // stack 4, pour la boucle
+    1:3                // on commence a 1 dans la stack 3
+    4:%@ (
+        3:=:3         // on duplique le nombre dans 3
+        3:%*:3        // on le multiplie par lui meme
+        1:=:3         // on va chercher le nombre de pixels on le met dans 3
+        3:%==:3  3:? (3:(!!!):3 4:! 0:4) : (
+            3:%>:3 3:? (3:print_wrong_image:3) : (3:(!!!):3 1:3 3:+:3)
+        )
+    )
+    4:(!)            // La stack 4 est maintenant vide
+    3:=:2
+	3:!        // La stack 2 contient la taille du carre. La stack 3 est maintenant vide.
 } get_square_size
 
 {
-	"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
-} make_table
+	4:9     
+	9:/:9	
+	9:=:1 //nombre de pixel on met dans 1
+	9:!	  // La stack 9 est vide
+	get_square_size
+} count_pixels
 
-#!
+{
+	"Image received, nb pixels : ":1
+	1:print
+	1:print
+	"\nFound square : ":1
+	1:print
+	2:=:2
+	2:print
+	"\n":1
+	1:print
+	// Ici 1 est vide
+} display_info
 
-// ***************** Init ******************* //
+{
+	0:][:1 				// Met tout les chars split dans 1
 
-1:1					// Placer le bool pour la lectrure
-""					// Chaine vide initiale
-1:%@ (				// Loop de la lecture du fichier
-	0:read:0
-	65535:0
-	(0:==:0) 0:? (1:! 1:1) : (1:! 0:1)
-	0:+
-)					// Notre fichier est entierement lu.
-1:!					// La stack 1 est maintenant vide
-[#]					// On obtient le nombres de caracteres du fichier
-get_nbr_pixels
-get_square_size
-image_received
-found_square
+	4:1
+	1:/:1				// On calcule le nombres de pixels
+	1:#(
+							// inversage de l'ordre
+		4:7
+		7:#(1:=:2 1:!)
+		4 :7
+		7:#(2:=:3 2:!)
 
-// ***************** String Splitting ******************* //
+		3 :7
+		7:#(3:+:3) 
+		3:=:0 
+		3:!
+	)
+	// La stack 3 et 7 sont vides
+} split_4
 
-][:3
-3:(!):3				// Remove the number of char on stack 3
-1:=:4
-4:%@ (
-	3:(+++):3
-	3:=:0 3:(!):3
-	1:4 4:-:4
-)
-					// Now all the splitted strings are on 0 in the right order.
-4:(!):4				// Stack 4 is now empty, Stack 3 too
-3:make_table:3		// Stack 3, la table
-][:4
-4:#(
-	4:print "\n":4 4:print
+{
+	(7:#:7 0:7 7:!=:7) 7:? (7:#:7 7:#!)
+	6:%][:7
+	7:!
+	63:4
+	3:=:7
+	7:!=:7
+	7:@(1:4
+		4:-:4
+		3:=:7
+		(7:#:7 1:7 7:==:7) 7:? ("Image have wrong caractere\n":7 7:print 7:1 7:exit)
+		7:!=:7
+		)
+	3:!
+} convert_decimal
+
+{
+    3:2
+    2:%@(
+        3:=:3
+        255:3
+        3:&:8
+        8:3
+        3:>>:3
+        //8:print "\n":0 0:print
+
+        //loop ne pas toucher
+        1:2
+        2:-:2
+    )
+        2:! //clean the loop variable
+} big_int_to_rgb
+
+{
+	3:8
+	8:#(6:4			
+		4:<<:4
+		4:|:4
+	)		//shifftage du nombre
+
+} big_int
+
+{
+    16:8
+    8:+:8
+    8:+:8
+    8:+:4
+}    shorten_to_colour
+
+{
+    6:3
+    3:*:3
+    256:3
+    3:/:8
+} shorten_rgb
+
+{
+    3:2
+    2:%@(
+        3:=:3
+        255:3
+        3:&:3
+        shorten_rgb
+        2:(= 1 ==):2 ? 8:(36 *):8
+        2:(= 2 ==):2 ? 8:(6 *):8
+        8:3
+        3:>>:3
+
+        //loop do not modify
+        1:2
+        2:-:2
+    )
+    2:! //clean the loop variable
+} big_int_to_colour
+
+{
+	(7:#:7 7:#:7 7:#!)		// Vider la stack 7
+	6:%][:7					// On split la base dans la stack 7
+	7:!						// On supprime le nombre de caractere
+
+	0:=:3					// Duplique la string qu'il va modifie dans la stack 3
+	0:!						// Supprime la chaine dans la stack 0
+	3:][:3					// Explose la string en caractere dans la stack 3
+	3:!						// Supprime la taille dans la stack 3
+	
+	4:8						// On met 4 dans la stack 8
+	8:#convert_decimal		// Dans 8 
+	big_int					//return in pile_4, le big int est bon.
+	4:=:3 
+	4:!
+
+	big_int_to_colour		//returns the final colour unshortened
+	shorten_to_colour		//return in pile_8, this is the real color to print.
+	"\e[48;5;":8
+	4:=:8
+	"m  ":8
+	8:(+ +):8
+	8:print
+	4:!
+} print_color
+
+//0 a chaque pixel separer dans une srting recuperable dans l'ordre d'affichage
+//1 le nombre de pixel par ligne
+//2 a le nombre de pixel afficher sur la ligne courante
+//3 est le lieu de travail pour afficher le pixel
+//4 deuxieme lieu de travail pour jafficher le pixel
+//5 sack pour faire les comparaison
+//6 stock alphabet 64
+//7 utilisation alphabet 64
+//8 pas encore utiliser
+//9 a le nombre de caractere total sa peut servir mais je sais pas pourquoi
+
+//                ****** MAIN ******* 
+
+#!		// On vire les arguments
+
+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/":6
+
+read
+0:=:1
+65535					// Valeur maximum de read
+0:==:2
+2:@(read 0:=:1 65535:0 0:==:2 0:+:0 1:+:1)
+1:=:9  					// On met le nombre de caractere dans 9
+1:!						// On enleve le nombre de char dans la stack 1	
+2:!						// On enleve deux.
+
+count_pixels
+display_info
+
+split_4
+						// Stack 0 : toute les listes de pixels
+						// Stack 2 : taille du carre.
+						// Stack 6 : il y a la base
+2:=:2
+2:#(	// On itere dans tout les listes
+	2:=:2
+	2:#print_color
+	"\e[0m\n":9
+	9:print
 )
