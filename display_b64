@@ -1,7 +1,7 @@
 #!ressources/yasl_linux
 
 {
-    "\nWrong image : the image must be square.\n"
+    "Wrong image : the image must be square.\n"
     print
     1
     exit
@@ -24,15 +24,12 @@
 } get_square_size
 
 {
-	4:9     
-	9:/:9	
-	9:=:1 //nombre de pixel on met dans 1
-	9:!	  // La stack 9 est vide
-	get_square_size
+	4:1
+	1:/:1
 } count_pixels
 
 {
-	"\nImage received, nb pixels : ":1
+	"Image received, nb pixels : ":1
 	1:print
 	1:print
 	"\nFound square : ":1
@@ -175,7 +172,6 @@
 //6 stock alphabet 64
 //7 utilisation alphabet 64
 //8 pas encore utiliser
-//9 a le nombre de caractere total sa peut servir mais je sais pas pourquoi
 
 //                ****** MAIN ******* 
 
@@ -183,16 +179,19 @@
 
 "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/":6
 
-read
-0:=:1
-65535					// Valeur maximum de read
-0:==:2
-2:@(read 0:=:1 65535:0 0:==:2 0:+:0 1:+:1)
-1:=:9  					// On met le nombre de caractere dans 9
-1:!						// On enleve le nombre de char dans la stack 1	
-2:!						// On enleve deux.
+1:1					// Placer le bool pour la lectrure
+""					// Chaine vide initiale
+1:%@ (				// Loop de la lecture du fichier
+	0:read:0
+	65535:0
+	(0:==:0) 0:? (1:! 1:1) : (1:! 0:1)
+	0:+
+)					// Notre fichier est entierement lu.
+1:!					// On vide la stack 1 (bool de lecture)
+0:[#]:1				// On obtient le nombres de caracteres du fichier, on le met dans 1
 
 count_pixels
+get_square_size
 display_info
 
 split_4
